@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="text" name="" id="hi" placeholder="message">
+    <input type="text" name="" id="u" placeholder="to">
+    <button id="b">Send Message</button>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+         function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+        const myName = getCookie("email");
+        document.body.appendChild(document.createTextNode(`Your name is ${myName}`))
+        var socket = io();
+        document.getElementById("hi").addEventListener("change", (e) => {
+            socket.emit("typing", e.target.value);
+        })
+        document.getElementById("b").addEventListener("click", (e) => {
+            socket.emit("msg", JSON.stringify({msg : document.getElementById("hi").value , to : document.getElementById("u").value}));
+        })
+        socket.on(`msg`, (msg) => {
+            if(JSON.parse(msg).to == myName)
+                document.body.appendChild(document.createTextNode(msg));
+        })
+    </script>
+</body>
+
+</html>
