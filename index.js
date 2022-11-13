@@ -54,7 +54,7 @@ app.post("/register", (req, res) => {
     password
   });
   myuser.save();
-  res.send("User successfully added");
+  res.sendFile(__dirname + '/frontend/login.html');
 })
 
 app.post("/login",(req,res)=>{
