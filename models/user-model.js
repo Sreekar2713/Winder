@@ -3,10 +3,7 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema({
     email : "string",
     password : "string",
-},{
-    collection : "users"
 });
- 
 const messchema = new mongoose.Schema({
     to:"string",
     content:"string",

@@ -53,7 +53,7 @@
 
         button {
             position: relative;
-            
+
             background-color: #ffffff;
             color: #080710;
             border-radius: 10px;
@@ -90,6 +90,8 @@
         #namedp {
             background-color: rgba(255, 255, 255, 0.13);
             position: relative;
+            font-size: 30px;
+            margin:15px;
             float: right;
             border-radius: 10px;
             backdrop-filter: blur(10px);
@@ -113,6 +115,15 @@
             overflow-wrap: break-word;
             overflow-y: auto;
             overflow-anchor: bottom;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-image: linear-gradient(180deg, #d0368a 0%, #708ad4 99%);
+            box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);
+            border-radius: 100px;
+        }
+        html{
+            scrollbar-color: red;
         }
     </style>
 </head>
@@ -175,10 +186,10 @@
             let data = await res.json();
             data = data.filter(x => x.to == myName);
             console.log(data);
-            console.log(myName);      
+            console.log(myName);
             return data;
         }
-        
+
         const getother = async () => {
             const res = await fetch("/other", {
                 headers: {
@@ -196,13 +207,13 @@
             console.log(myName);
             return data;
         }
-        Promise.all([getchats(),getother()]).then(values => {
-            console.log("values " , values)
+        Promise.all([getchats(), getother()]).then(values => {
+            console.log("values ", values)
             Alldata.push(...values[0]);
             Alldata.push(...values[1]);
-            Alldata.sort((a,b) => a.timestamp - b.timestamp);
-            for(var i=0; i<Alldata.length; i++){
-                document.getElementById("chats").appendChild(document.createTextNode(Alldata[i].from+':' +Alldata[i].content));
+            Alldata.sort((a, b) => a.timestamp - b.timestamp);
+            for (var i = 0; i < Alldata.length; i++) {
+                document.getElementById("chats").appendChild(document.createTextNode(Alldata[i].from + ':' + Alldata[i].content));
                 document.getElementById("chats").appendChild(document.createElement("br"));
             }
         })

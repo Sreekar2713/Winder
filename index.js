@@ -28,8 +28,8 @@ app.use(
 
 connectDB();
 
-const userModel = mongoose.model("User", userSchema);
-const mesModel = mongoose.model("User", messchema);
+const userModel = mongoose.model("users", userSchema);
+const mesModel = mongoose.model("msgs", messchema);
 
 app.get("/",(req,res)=>{
   res.sendFile(__dirname + "/frontend/login.html");
@@ -75,7 +75,7 @@ app.post("/register", (req, res) => {
   res.sendFile(__dirname + '/frontend/login.html');
 })
 
-app.post("/login",(req,res)=>{
+app.post("/login",(req,res)=> {
   const { email, password } = req.body;
   console.log(email,password);
   userModel.findOne({'email':email,'password' : password},(err,user)=>{
