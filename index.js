@@ -7,6 +7,7 @@ const { Server } = require("socket.io");
 const connectDB = require('./db');
 const io = new Server(server);
 const userSchema = require("./models/user-model");
+const messchema = require("./models/user-model");
 const session = require("express-session");
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
@@ -28,6 +29,7 @@ app.use(
 connectDB();
 
 const userModel = mongoose.model("User", userSchema);
+const mesModel = mongoose.model("User", messchema);
 
 app.get("/",(req,res)=>{
   res.sendFile(__dirname + "/frontend/login.html");
@@ -38,14 +40,30 @@ app.get('/home', (req, res) => {
     res.sendFile(__dirname + '/frontend/index.html');
     return;
   }
+  
   res.redirect("/");
 });
+
 
 app.get('/register',(req,res)=>{
   res.sendFile(__dirname + '/frontend/register.html');
 })
 
+app.post('/allmessages',(req,res)=>{
+  const{email} = req.body;
+  var userdb=mesModel.find({'to':email},(err,users)=>{
+    console.log(users);
+    res.json(users);
+  });
+})
 
+app.post('/other',(req,res)=>{
+  const{email} = req.body;
+  var mdb=mesModel.find({'from':email},(err,msgs)=>{
+    console.log(msgs);
+    res.json(msgs);
+  });
+})
 
 app.post("/register", (req, res) => {
   const { email, password } = req.body;
@@ -82,8 +100,16 @@ io.on('connection', (socket) => {
     console.log("You are typing " + msg);
   })
   socket.on("msg", (msg) => {
-    console.log(msg);
+    console.log("dwada" , msg);
     io.emit("msg",msg);
+    const mssg = JSON.parse(msg);
+    const message = new mesModel({
+      to : mssg.to,
+      content : mssg.msg,
+      from: mssg.from,
+      timestamp: Date.now()
+    });
+    message.save();
   })
 });
 
